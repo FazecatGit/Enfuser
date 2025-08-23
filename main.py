@@ -9,7 +9,7 @@ def main():
         text = input("Enter text to convert to translate: ")
 
 
-    translated = translated_text(text)
+    translated = translate_text(text)
     print("\nTranslated text:", translated)
 
 if __name__ == "__main__":
