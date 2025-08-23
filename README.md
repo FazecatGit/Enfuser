@@ -1,5 +1,4 @@
-# immerser
-
+# Enfuser
 A translator application where the main goal is to immerse yourself into the language you are learning and being able to scan all the text in your screen and paste it in.
 
 It will also have a simple translator in the CLI with the hopes to make it look user friendly. 
