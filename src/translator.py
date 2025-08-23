@@ -55,3 +55,19 @@ def get_cached_translation(text, target_lang="JA"):
             return cache.get(key)
     return None
 
+def clear_cache():
+    cache_file = Path(__file__).parent / "translation_cache.json"
+    if cache_file.exists():
+        cache_file.unlink()
+        print(f"[cache cleared] {cache_file.resolve()}")
+
+def choose_language():
+    languages = ["JA", "ZH", "RU", "DE", "KO"]
+    print("Choose target language:")
+    for i, lang in enumerate(languages, 1):
+        print(f"{i}. {lang}")
+    choice = input("Enter the number of your choice: ")
+    if choice.isdigit() and 1 <= int(choice) <= len(languages):
+        return languages[int(choice) - 1]
+    print("Invalid choice, defaulting to JA.")
+    return "JA"

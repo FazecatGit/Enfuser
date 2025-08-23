@@ -3,14 +3,21 @@ import sys
 from src.translator import * #need to make
 
 def main():
-    if len(sys.argv) > 1:
-        text = " ".join(sys.argv[1:])
-    else:
-        text = input("Enter text to convert to translate: ")
+    while True:
 
+        target_language = choose_language()
+        print(f"Selected target language: {target_language}")
 
-    translated = translate_text(text)
-    print("\nTranslated text:", translated)
+        text = input("Enter text to translate (or 'q' to quit): ").strip()
+        if text.lower() == "q":
+            break
+        
+        should_clear_cache = input("Clear cache? (y/n): ").strip().lower() == "y"
+        if should_clear_cache:
+            clear_cache()
+
+        translated = translate_text(text, target_lang=target_language)
+        print("\nTranslated text:", translated)
 
 if __name__ == "__main__":
     main()
