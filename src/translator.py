@@ -1,6 +1,6 @@
+from pathlib import Path
 import deepl
 import os
-from pathlib import Path
 import json
 from dotenv import load_dotenv
 
@@ -19,24 +19,39 @@ def translate_text(text, target_lang="JA"):
         return result.text
 
 def cache_translation(text, translated_text, target_lang="JA"):
-    key = f"{text}_{target_lang}"
-    cache_file = Path("translation_cache.json")
+    key = f"{text.strip().lower()}_{target_lang.upper()}"
+    
+    cache_file = Path(__file__).parent / "translation_cache.json"
+    
     if cache_file.exists():
         with open(cache_file, "r", encoding="utf-8") as f:
-            cache = json.load(f)
+            if cache_file.stat().st_size == 0:
+                cache = {}
+            else:
+                cache = json.load(f)
     else:
+        cache_file.write_text("{}", encoding="utf-8")
         cache = {}
-
+    
     cache[key] = translated_text
 
-    with open(cache_file, "w", encoding="utf-8") as f:
-        json.dump(cache, f, ensure_ascii=False, indent=2)
+    try:
+        with open(cache_file, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=2)
+        print(f"[cache saved] {cache_file.resolve()}")
+    except Exception as e:
+        print(f"Error writing cache: {e}")
+
 
 def get_cached_translation(text, target_lang="JA"):
     key = f"{text}_{target_lang}"
-    cache_file = Path("translation_cache.json")
+    cache_file = Path(__file__).parent / "translation_cache.json"
+
     if cache_file.exists():
+        if cache_file.stat().st_size == 0:
+            return None
         with open(cache_file, "r", encoding="utf-8") as f:
             cache = json.load(f)
             return cache.get(key)
     return None
+
