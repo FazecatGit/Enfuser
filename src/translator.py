@@ -69,3 +69,4 @@ class Translator:
     
     def swap_languages(self):
         self.source_lang, self.target_lang = self.target_lang, self.source_lang
+
