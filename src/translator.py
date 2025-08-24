@@ -14,7 +14,6 @@ class Translator:
         self.cache = self._load_cache()
 
     def _load_cache(self):
-        """Load cache from JSON file, initialize empty dict if file missing or empty."""
         if self.cache_file.exists() and self.cache_file.stat().st_size > 0:
             try:
                 with open(self.cache_file, "r", encoding="utf-8") as f:
@@ -25,7 +24,6 @@ class Translator:
         return {}
 
     def _save_cache(self):
-        """Save the in-memory cache to the JSON file."""
         try:
             with open(self.cache_file, "w", encoding="utf-8") as f:
                 json.dump(self.cache, f, ensure_ascii=False, indent=2)
@@ -33,7 +31,6 @@ class Translator:
             print(f"Error writing cache: {e}")
 
     def translate(self, text):
-        """Translate text, using cache if available."""
         key = f"{text.strip().lower()}_{self.target_lang}"
         if key in self.cache:
             print("[cache hit]")
@@ -44,19 +41,28 @@ class Translator:
         self._save_cache()
         return result.text
 
-
     def clear_cache(self):
-        """Clear the translation cache."""
         self.cache = {}
         self._save_cache()
         print("[cache cleared]")
 
     def choose_language(self):
-        languages = ["JA", "ZH", "RU", "DE", "KO"]
-        print("Choose target language:")
-        for i, lang in enumerate(languages, 1):
-            print(f"{i}. {lang}")
-        choice = input("Enter the number of your choice: ")
-        if choice.isdigit() and 1 <= int(choice) <= len(languages):
-            self.target_lang = languages[int(choice) - 1]
-        print(f"Target language set to: {self.target_lang}")
+        valid_languages = ["JA", "ZH", "RU", "DE", "KO"]
+        lang = input(f"Enter target language code {valid_languages} (default {self.target_lang}): ") or self.target_lang
+        if lang in valid_languages:
+            self.target_lang = lang.upper()
+        else:
+            print(f"Invalid language code. Keeping default: {self.target_lang}")
+
+        return self.target_lang
+
+    def translate_from(self, text, source_lang):
+        key = f"{text.strip().lower()}_{self.target_lang}"
+        if key in self.cache:
+            print("[cache hit]")
+            return self.cache[key]
+
+        result = self.translator.translate_text(text, source_lang=source_lang, target_lang=self.target_lang)
+        self.cache[key] = result.text
+        self._save_cache()
+        return result.text
