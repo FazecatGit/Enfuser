@@ -7,9 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Translator:
-    def __init__(self, target_lang="JA"):
+    def __init__(self, target_lang="JA", source_lang="EN"):
         self.target_lang = target_lang.upper()
         self.translator = deepl.Translator(os.getenv("DEEPL_API_KEY"))
+        self.source_lang = source_lang.upper() 
         self.cache_file = Path(__file__).parent / "translation_cache.json"
         self.cache = self._load_cache()
 
@@ -31,9 +32,8 @@ class Translator:
             print(f"Error writing cache: {e}")
 
     def translate(self, text):
-        key = f"{text.strip().lower()}_{self.target_lang}"
+        key = f"{text.strip().lower()}_{self.source_lang}_{self.target_lang}"
         if key in self.cache:
-            print("[cache hit]")
             return self.cache[key]
 
         result = self.translator.translate_text(text, target_lang=self.target_lang)
@@ -66,3 +66,6 @@ class Translator:
         self.cache[key] = result.text
         self._save_cache()
         return result.text
+    
+    def swap_languages(self):
+        self.source_lang, self.target_lang = self.target_lang, self.source_lang

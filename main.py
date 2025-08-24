@@ -50,7 +50,7 @@ def main():
 if __name__ == "__main__":
     mode = input("Choose mode: CLI or GUI (c/g): ").strip().lower()
     if mode == "c":
-        main()  # CLI loop
+        main()
     elif mode == "g":
         root = tk.Tk()
         root.title("Translator GUI")
