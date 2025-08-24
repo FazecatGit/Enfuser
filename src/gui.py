@@ -7,6 +7,7 @@ translator = Translator()
 
 class GUI:
     def __init__(self, master):
+        self.valid_languages = ["JA", "ZH", "RU", "DE", "KO", "EN"]
         self.master = master
         self.translator = translator
         self.translator.target_lang = "JA"
@@ -42,18 +43,34 @@ class GUI:
     def setup_target_language_menu(self):
         self.lang_ver = tk.StringVar(self.master)
         self.lang_ver.set(self.translator.target_lang)
-        self.lang_menu = tk.OptionMenu(self.top_frame, self.lang_ver, *["JA", "EN", "KO", "ZH"])
+
+        def on_lang_change(*args):
+            try:
+                self.translator.set_target_language(self.lang_ver.get())
+            except ValueError as e:
+                print(e)
+
+        self.lang_ver.trace_add("write", on_lang_change)
+
+        self.lang_menu = tk.OptionMenu(self.top_frame, self.lang_ver, *self.translator.valid_languages)
         self.lang_menu.pack(side=tk.LEFT, padx=5)
 
     def setup_source_language(self):
         self.source_lang_ver = tk.StringVar(self.master)
         self.source_lang_ver.set("EN")
-        self.source_menu = tk.OptionMenu(self.top_frame, self.source_lang_ver, *["EN", "JA", "KO", "ZH"])
+
+        self.source_menu = tk.OptionMenu(self.top_frame, self.source_lang_ver, *self.valid_languages)
         self.source_menu.pack(side=tk.LEFT, padx=5)
 
+        def on_source_change(*args):
+            self.translator.source_lang = self.source_lang_ver.get()
+
+        self.source_lang_ver.trace("w", on_source_change)
+
     def setup_translate_clipboard(self):
-        self.swap_button = tk.Button(self.top_frame, text="Clipboard Translate", command=self.translate_clipboard)
-        self.swap_button.pack(side=tk.LEFT, padx=5)
+        self.clipboard_button = tk.Button(self.top_frame, text="Clipboard Translate", command=self.translate_clipboard)
+        self.clipboard_button.pack(side=tk.LEFT, padx=5)
+
 
     def setup_toggle_mode(self):
         self.dark_mode = False
@@ -122,8 +139,15 @@ class GUI:
         bg = "#1e1e1e"
         fg = "#ffffff"
         self.master.configure(bg=bg)
-        self.input_text.configure(bg=bg, fg=fg, insertbackground=fg)
-        self.output_text.configure(bg=bg, fg=fg, insertbackground=fg)
+        widgets = [self.input_text, self.output_text, self.label,
+                self.translate_button, self.clear_cache_button, self.swap_button,
+                self.toggle_button, self.lang_menu, self.source_menu]
+        for w in widgets:
+            try:
+                w.configure(bg=bg, fg=fg, insertbackground=fg)
+            except:
+                pass 
+
 
     def enable_light_mode(self):
         bg = "#ffffff"

@@ -8,11 +8,14 @@ load_dotenv()
 
 class Translator:
     def __init__(self, target_lang="JA", source_lang="EN"):
+        self.valid_languages = ["JA", "ZH", "RU", "DE", "KO", "EN"] 
         self.target_lang = target_lang.upper()
         self.translator = deepl.Translator(os.getenv("DEEPL_API_KEY"))
         self.source_lang = source_lang.upper() 
         self.cache_file = Path(__file__).parent / "translation_cache.json"
         self.cache = self._load_cache()
+        self.valid_languages = ["JA", "ZH", "RU", "DE", "KO", "EN"]
+        self.target_lang = target_lang if target_lang in self.valid_languages else "EN"
 
     def _load_cache(self):
         if self.cache_file.exists() and self.cache_file.stat().st_size > 0:
@@ -36,10 +39,15 @@ class Translator:
         if key in self.cache:
             return self.cache[key]
 
-        result = self.translator.translate_text(text, target_lang=self.target_lang)
-        self.cache[key] = result.text
+        try:
+            result = self.translator.translate_text(text, target_lang=self.target_lang)
+            translated = result.text
+        except Exception:
+            translated = f"[{self.target_lang}] {text}"
+
+        self.cache[key] = translated
         self._save_cache()
-        return result.text
+        return translated
 
     def clear_cache(self):
         self.cache = {}
@@ -70,3 +78,8 @@ class Translator:
     def swap_languages(self):
         self.source_lang, self.target_lang = self.target_lang, self.source_lang
 
+    def set_target_language(self, lang_code):
+        if lang_code in self.valid_languages:
+            self.target_lang = lang_code
+        else:
+            raise ValueError(f"Invalid language code: {lang_code}")
