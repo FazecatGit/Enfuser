@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox 
 from src.translator import Translator
 from src.clipboard import ClipboardManager
+from src.OCR_Screenshot import OCRScreenshot
 
 translator = Translator()
 
@@ -11,6 +12,7 @@ class GUI:
         self.master = master
         self.translator = translator
         self.translator.target_lang = "JA"
+        self.ocr = OCRScreenshot(lang="eng")
 
         self.setup_controls()
         self.setup_text_frames()
@@ -19,6 +21,7 @@ class GUI:
         self.top_frame = tk.Frame(self.master)
         self.top_frame.pack(pady=10)
 
+        #button methods
         self.setup_source_language()
         self.setup_translate_button()
         self.setup_clear_cache_button()
@@ -26,6 +29,7 @@ class GUI:
         self.setup_target_language_menu()
         self.setup_translate_clipboard()
         self.setup_toggle_mode()
+        self.setup_ocr_translate_screenshot()
 
 
     def setup_translate_button(self):
@@ -90,6 +94,12 @@ class GUI:
         self.output_text = tk.Text(text_frames, wrap="word")
         self.output_text.pack(side=tk.LEFT, fill="both", expand=True)
 
+
+    def setup_ocr_translate_screenshot(self):
+        self.ocr_button = tk.Button(self.top_frame, text="OCR Translate Screenshot", command=self.ocr_translate_screenshot)
+        self.ocr_button.pack(side=tk.LEFT, padx=5)
+
+    #the gui functions
     def translate_text(self):
         text = self.input_text.get("1.0", tk.END).strip()
         if not text:
@@ -135,6 +145,8 @@ class GUI:
 
         ClipboardManager.set_text(translated)
 
+    # dark mode enabler 
+
     def enable_dark_mode(self):
         bg = "#1e1e1e"
         fg = "#ffffff"
@@ -148,7 +160,7 @@ class GUI:
             except:
                 pass 
 
-
+    
     def enable_light_mode(self):
         bg = "#ffffff"
         fg = "#000000"
@@ -163,7 +175,18 @@ class GUI:
             self.enable_dark_mode()
         self.dark_mode = not self.dark_mode
 
+    #screenshot
 
+    def ocr_translate_screenshot(self):
+        text = self.ocr.capture_text()
+        if not text:
+            return
+
+        translated = self.translator.translate(text)
+        self.input_text.delete("1.0", tk.END)
+        self.input_text.insert(tk.END, text)
+        self.output_text.delete("1.0", tk.END)
+        self.output_text.insert(tk.END, translated)
 
 if __name__ == "__main__":
     root = tk.Tk()
