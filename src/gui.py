@@ -4,6 +4,7 @@ from src.translator import Translator
 from src.clipboard import ClipboardManager
 from src.OCR_Screenshot import OCRScreenshot
 
+
 translator = Translator()
 
 class GUI:
@@ -12,7 +13,9 @@ class GUI:
         self.master = master
         self.translator = translator
         self.translator.target_lang = "JA"
-        self.ocr = OCRScreenshot(lang="eng")
+        self.ocr = OCRScreenshot(translator=self.translator, lang="eng")
+        self.master.focus_force()
+        self.master.bind("<u>", self.on_hotkey)
 
         self.setup_controls()
         self.setup_text_frames()
@@ -30,6 +33,7 @@ class GUI:
         self.setup_translate_clipboard()
         self.setup_toggle_mode()
         self.setup_ocr_translate_screenshot()
+        self.setup_hotkey_menu()
 
 
     def setup_translate_button(self):
@@ -98,6 +102,16 @@ class GUI:
     def setup_ocr_translate_screenshot(self):
         self.ocr_button = tk.Button(self.top_frame, text="OCR Translate Screenshot", command=self.ocr_translate_screenshot)
         self.ocr_button.pack(side=tk.LEFT, padx=5)
+
+
+    def setup_hotkey_menu(self):
+        self.hotkey_ver = tk.StringVar(self.master)
+        self.hotkey_ver.set("Clipboard Hotkey")
+
+        hotkeys = ["ctrl+shift+o", "ctrl+alt+t", "alt+q"]
+
+        self.hotkey_menu = tk.OptionMenu(self.top_frame, self.hotkey_ver, *hotkeys)
+        self.hotkey_menu.pack(side=tk.LEFT, padx=5)
 
     #the gui functions
     def translate_text(self):
@@ -187,6 +201,33 @@ class GUI:
         self.input_text.insert(tk.END, text)
         self.output_text.delete("1.0", tk.END)
         self.output_text.insert(tk.END, translated)
+
+    def update_hotkey(self, hotkey: str):
+        import keyboard
+        keyboard.clear_all_hotkeys()
+        keyboard.add_hotkey(hotkey, self.ocr_translate_screenshot)
+
+    def translate_screenshot_region(self):
+        text = self.ocr.capture_region()
+        if not text:
+            return
+        translated = self.translator.translate(text)
+        self.input_text.delete("1.0", tk.END)
+        self.input_text.insert(tk.END, text)
+
+        self.output_text.delete("1.0", tk.END)
+        self.output_text.insert(tk.END, translated)
+
+    def on_hotkey(self, event=None):
+
+        ocr_text = self.ocr.capture_and_translate_region(return_original=True)
+        
+        if ocr_text:
+            original_text, translated_text = ocr_text
+            self.input_text.delete("1.0", tk.END)
+            self.input_text.insert(tk.END, original_text)
+            self.output_text.delete("1.0", tk.END)
+            self.output_text.insert(tk.END, translated_text)
 
 if __name__ == "__main__":
     root = tk.Tk()

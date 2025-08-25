@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "deepl>=1.22.0",
+    "keyboard>=0.13.5",
+    "mss>=10.1.0",
     "pillow>=11.3.0",
     "pyautogui>=0.9.54",
     "pyperclip>=1.9.0",
