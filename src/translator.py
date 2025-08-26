@@ -83,3 +83,6 @@ class Translator:
             self.target_lang = lang_code
         else:
             raise ValueError(f"Invalid language code: {lang_code}")
+        
+    def get_cache_contents(self):
+        return "\n".join(f"{k} -> {v}" for k, v in self.cache.items())

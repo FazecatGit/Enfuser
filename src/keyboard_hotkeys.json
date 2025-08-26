@@ -1,0 +1,9 @@
+{
+  "capture_full": "ctrl+shift+f",
+  "capture_region": "ctrl+shift+r",
+  "translate": "ctrl+shift+t",
+  "swap": "ctrl+shift+s",
+  "view_cache": "ctrl+shift+v",
+  "clear_cache": "ctrl+shift+c",
+  "clipboard": "ctrl+shift+b"
+}

@@ -1,9 +1,25 @@
-
 import sys
 from src.translator import Translator
 import tkinter as tk
 from src.gui import GUI 
 from src.clipboard import ClipboardManager
+from src.keyboard_hotkeys import load_hotkeys, HotkeyManager
+
+def run_function(func_name):
+    if func_name == "capture_full":
+        gui.ocr_translate_screenshot()
+    elif func_name == "capture_region":
+        gui.translate_screenshot_region()
+    elif func_name == "translate":
+        gui.translate_text()
+    elif func_name == "swap":
+        gui.swap_languages()
+    elif func_name == "view_cache":
+        gui.view_cache()
+    elif func_name == "clear_cache":
+        gui.clear_cache()
+    elif func_name == "clipboard":
+        gui.translate_clipboard()
 
 
 def handle_language_selection(translator):
@@ -43,8 +59,6 @@ def handle_text_translation(translator):
 
     return text
 
-
-
 def main():
     translator = Translator()
     while True:
@@ -72,5 +86,19 @@ if __name__ == "__main__":
     elif mode == "g":
         root = tk.Tk()
         root.title("Translator GUI")
-        gui = GUI(root)
+        
+        # Load hotkeys
+        hotkeys = load_hotkeys()
+        
+        # Create GUI first with a temporary callback
+        gui = GUI(root, hotkeys, lambda new_hotkeys: None)
+        
+        # Create hotkey manager with hotkeys and callback to run GUI functions
+        hotkey_manager = HotkeyManager(hotkeys, run_function)
+        hotkey_manager.start()
+        
+        # Now update GUI callback so it can rebind hotkeys if needed
+        gui.rebind_callback = lambda new_hotkeys: hotkey_manager.update_hotkeys(new_hotkeys)
+
         root.mainloop()
+
