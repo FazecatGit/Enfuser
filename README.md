@@ -12,7 +12,6 @@ It also includes a **CLI translator** and plans to integrate advanced features u
 - Simple GUI with Tkinter.  
 - CLI-based translator for quick usage.  
 - Modular design: core translation, OCR, and hotkeys are separated for easier maintenance.  
--
 
 ---
 
