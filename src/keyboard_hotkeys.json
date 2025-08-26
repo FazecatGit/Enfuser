@@ -5,6 +5,5 @@
   "swap": "ctrl+shift+s",
   "view_cache": "ctrl+shift+v",
   "clear_cache": "ctrl+shift+c",
-  "clipboard": "ctrl+shift+b",
-  "tts": "ctrl+shift+l"
+  "clipboard": "ctrl+shift+b"
 }

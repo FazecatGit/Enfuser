@@ -23,13 +23,18 @@ Ensure you have **Python 3.10+** installed.
 ```bash
 python --version
 ```
-### 2. Install Python dependencies
+### 2. Clone the repository
+```bash
+https://github.com/FazecatGit/Enfuser.git
+```
+
+### 3. Install Python dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Install system dependencies
+### 4. Install system dependencies
 
 Tesseract OCR (required for pytesseract) and slop for screen selection:
 
@@ -39,6 +44,12 @@ sudo apt install tesseract-ocr
 sudo apt install slop
 ```
 
+### 5. Running file
+
+got to the root of the file and uv run main.py
+you should have either c for CLI or g for GUI
+GUI allows more featues than the CLI at the moment.
+
 Windows: Download installer from Tesseract GitHub
 
 ### Notes
@@ -47,6 +58,8 @@ The project is has more room to improve and primarily for personal learning and 
 
 DEEPL API is used for robust translation. Make sure to include your API key in a .env file.
 
-Clipboard and screen scanning features are optional but improve immersion.
-
 Contributions are welcome once the project is more complete.
+
+I'll slowly be updating till the limitations of the program have been met. 
+This is my proper first solo and I know it ain't great but I'll look at it 
+and see if theres any way to improve on it. Don't expect much from this.
