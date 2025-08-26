@@ -46,8 +46,11 @@ sudo apt install slop
 
 ### 5. Running file
 
-got to the root of the file and uv run main.py
-you should have either c for CLI or g for GUI
+go to the root of the file and paste this 
+```bash 
+uv run main.py
+```
+you should have either "c" for CLI or "g" for GUI
 GUI allows more featues than the CLI at the moment.
 
 Windows: Download installer from Tesseract GitHub
