@@ -44,7 +44,7 @@ sudo apt install tesseract-ocr
 sudo apt install slop
 ```
 
-### 5. Running file
+### 5. Running the file
 
 go to the root of the file and paste this 
 ```bash 
