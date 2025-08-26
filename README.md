@@ -1,12 +1,53 @@
 # Enfuser
 
-A translator application where the main goal is to immerse yourself into the language you are learning and being able to scan all the text in your screen and paste it in.
+A translator application designed to help you **immerse yourself in a language** by scanning text from your screen or typing it directly.  
+The goal is to enhance language learning and provide a simple, user-friendly interface for quick translations.
 
-It will also have a simple translator in the CLI with the hopes to make it look user friendly. 
+It also includes a **CLI translator** and plans to integrate advanced features using the DEEPL API.
 
-Using the DEEPL API as the more robust translator in my opinion, the goal is to to choose what DEEPL has to offer and start immersing yourself.
+---
 
-Instructions are null due to it being unfinished, but once I feel like its sufficient for use I'll update the readme.
+## Features
+- Translate text from screen captures or clipboard.  
+- Simple GUI with Tkinter.  
+- CLI-based translator for quick usage.  
+- Modular design: core translation, OCR, and hotkeys are separated for easier maintenance.  
+-
 
-The goal of this product is for my own personal gain in just creating and boosting my understanding and delving into the unknown. 
+---
 
+## Installation
+
+### 1. Install Python
+Ensure you have **Python 3.10+** installed.
+
+```bash
+python --version
+```
+### 2. Install Python dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Install system dependencies
+
+Tesseract OCR (required for pytesseract) and slop for screen selection:
+
+Linux:
+```bash 
+sudo apt install tesseract-ocr
+sudo apt install slop
+```
+
+Windows: Download installer from Tesseract GitHub
+
+### Notes
+
+The project is has more room to improve and primarily for personal learning and experimentation.
+
+DEEPL API is used for robust translation. Make sure to include your API key in a .env file.
+
+Clipboard and screen scanning features are optional but improve immersion.
+
+Contributions are welcome once the project is more complete.

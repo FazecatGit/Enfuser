@@ -1,0 +1,8 @@
+deepl
+python-dotenv
+pyperclip
+pytesseract
+pyautogui
+pillow
+pynput
+tkinter

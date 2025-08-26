@@ -4,6 +4,7 @@ from src.translator import Translator
 from src.clipboard import ClipboardManager
 from src.OCR_Screenshot import OCRScreenshot
 from src.keyboard_hotkeys import HotkeyEditor
+from src.tts_core import speak
 
 translator = Translator()
 
@@ -39,6 +40,7 @@ class GUI:
         self.setup_translate_clipboard()
         self.setup_toggle_mode()
         self.setup_ocr_translate_screenshot()
+        self.setup_tts_hotkey()
 
     def setup_hotkey_controls(self):
         # Only one hotkey editor button
@@ -117,6 +119,10 @@ class GUI:
     def setup_cache_viewer(self):
         self.cache_button = tk.Button(self.top_frame, text="View Cache", command=self.view_cache)
         self.cache_button.pack(side=tk.LEFT, padx=5)
+
+    def setup_tts_hotkey(self):
+        speak_button = tk.Button(self.top_frame, text="Speak", command=self.on_tts_hotkey)
+        speak_button.pack(padx=10, pady=10)
 
     # ------------------ GUI FUNCTIONS ------------------ #
 
@@ -232,6 +238,13 @@ class GUI:
     def update_hotkey(self, hotkey: str):
         import keyboard
         keyboard.clear_all_hotkeys()
+
+    # -------------------TTS------------------- #
+
+    def on_tts_hotkey(self):
+        text = self.input_text.get("1.0", tk.END).strip()
+        if text:
+            speak(text)
 
 # ------------------ RUN GUI ------------------ #
 if __name__ == "__main__":

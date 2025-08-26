@@ -70,4 +70,4 @@ class HotkeyEditor(tk.Toplevel):
             self.rebind_callback(self.hotkeys)
             messagebox.showinfo("Success", f"Hotkey for {func.capitalize()} changed to {new_hotkey}.")
             self.destroy()
-            HotkeyEditor(self.master, self.hotkeys, self.rebind_callback)  #refresh :)
+            HotkeyEditor(self.master, self.hotkeys, self.rebind_callback)  # refresh :)

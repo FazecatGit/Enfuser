@@ -20,6 +20,8 @@ def run_function(func_name):
         gui.clear_cache()
     elif func_name == "clipboard":
         gui.translate_clipboard()
+    elif func_name == "tts":
+        gui.on_tts_hotkey()
 
 
 def handle_language_selection(translator):
