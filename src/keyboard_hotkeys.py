@@ -29,9 +29,15 @@ class HotkeyManager:
         self.listener = None
 
     def start(self):
+        if self.listener:
+            self.listener.stop()
+
         hotkey_mapping = {}
         for func, combo in self.hotkeys.items():
-            combo_pynput = combo.replace("ctrl", "<ctrl>").replace("shift", "<shift>").replace("alt", "<alt>")
+            combo_pynput = combo.lower()
+            combo_pynput = combo_pynput.replace("ctrl", "<ctrl>")
+            combo_pynput = combo_pynput.replace("shift", "<shift>")
+            combo_pynput = combo_pynput.replace("alt", "<alt>")
             hotkey_mapping[combo_pynput] = lambda f=func: self.callback(f)
 
         self.listener = keyboard.GlobalHotKeys(hotkey_mapping)
@@ -40,6 +46,7 @@ class HotkeyManager:
     def stop(self):
         if self.listener:
             self.listener.stop()
+            self.listener = None
     
     def update_hotkeys(self, new_hotkeys):
         self.hotkeys = new_hotkeys
