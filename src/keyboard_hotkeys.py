@@ -23,8 +23,6 @@ def save_hotkeys(hotkeys):
 
 # Hotkey listener
 class HotkeyManager:
-
-
     def __init__(self, hotkeys, callback):
         self.hotkeys = hotkeys
         self.callback = callback

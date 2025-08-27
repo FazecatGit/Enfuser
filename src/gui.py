@@ -16,7 +16,6 @@ class GUI:
         self.translator.target_lang = "JA"
         self.ocr = OCRScreenshot(translator=self.translator, lang="eng")
         self.master.focus_force()
-        self.master.bind("<u>", self.on_hotkey)
         self.rebind_callback = rebind_callback
         self.hotkeys = hotkeys
 
