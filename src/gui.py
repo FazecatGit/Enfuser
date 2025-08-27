@@ -1,9 +1,12 @@
 import tkinter as tk
+import sys
 from tkinter import messagebox 
 from src.translator import Translator
 from src.clipboard import ClipboardManager
 from src.OCR_Screenshot import OCRScreenshot
 from src.keyboard_hotkeys import HotkeyEditor
+import subprocess
+import pyautogui
 #from src.tts_core import speak
 
 translator = Translator()
@@ -39,6 +42,7 @@ class GUI:
         self.setup_translate_clipboard()
         self.setup_toggle_mode()
         self.setup_ocr_translate_screenshot()
+        self.setup_clear_text_button()
         #self.setup_tts_hotkey()
 
     def setup_hotkey_controls(self):
@@ -118,6 +122,10 @@ class GUI:
     def setup_cache_viewer(self):
         self.cache_button = tk.Button(self.top_frame, text="View Cache", command=self.view_cache)
         self.cache_button.pack(side=tk.LEFT, padx=5)
+
+    def setup_clear_text_button(self):
+        self.clear_text_button = tk.Button(self.top_frame, text="Clear Text", command=self.clear_text)
+        self.clear_text_button.pack(side=tk.LEFT, padx=5)
 
     #def setup_tts_hotkey(self):
         #speak_button = tk.Button(self.top_frame, text="Speak", command=self.on_tts_hotkey)
@@ -214,14 +222,32 @@ class GUI:
         self.output_text.insert(tk.END, translated)
 
     def translate_screenshot_region(self):
-        text = self.ocr.capture_region()
-        if not text:
+        self.master.iconify()
+        if sys.platform.startswith("linux"):
+            coords = subprocess.check_output("slop -f '%x %y %w %h'", shell=True).decode().strip()
+            x, y, w, h = map(int, coords.split())
+        else:
+            screen = pyautogui.size()
+            x, y, w, h = 0, 0, screen.width, screen.height
+
+        screenshot = pyautogui.screenshot(region=(x, y, w, h))
+
+        ocr_text = self.ocr.convert_text(screenshot) 
+
+        if not ocr_text.strip():
             return
-        translated = self.translator.translate(text)
+
+        translated = self.translator.translate(ocr_text)
+
         self.input_text.delete("1.0", tk.END)
-        self.input_text.insert(tk.END, text)
+        self.input_text.insert("1.0", ocr_text)
+
         self.output_text.delete("1.0", tk.END)
-        self.output_text.insert(tk.END, translated)
+        self.output_text.insert("1.0", translated)
+
+    def clear_text(self):
+        self.input_text.delete("1.0", tk.END)
+        self.output_text.delete("1.0", tk.END)
 
     # ------------------ HOTKEY FUNCTIONS ------------------ #
 
@@ -233,10 +259,6 @@ class GUI:
             self.input_text.insert(tk.END, original_text)
             self.output_text.delete("1.0", tk.END)
             self.output_text.insert(tk.END, translated_text)
-
-    def update_hotkey(self, hotkey: str):
-        import keyboard
-        keyboard.clear_all_hotkeys()
 
     # -------------------TTS------------------- #
     #########

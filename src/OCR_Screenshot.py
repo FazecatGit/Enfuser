@@ -1,6 +1,7 @@
+import re
 import pytesseract
 import pyautogui
-from PIL import Image
+from PIL import Image, ImageOps
 import sys
 import subprocess
 from src.translator import Translator
@@ -25,7 +26,8 @@ class OCRScreenshot:
             return ""
 
     def capture_region(self) -> str:
-        return self.capture_and_translate_region(return_original=False)
+        ocr_text, _ = self.capture_and_translate_region(return_original=True)
+        return ocr_text
 
     #placeholder function - redundant
     def capture_text_from_file(self, image_path: str) -> str:
@@ -74,5 +76,12 @@ class OCRScreenshot:
         except Exception as e:
             print(f"Error capturing and translating region: {e}")
             return ""
-            
 
+    def convert_text(self, img):
+        gray = ImageOps.grayscale(img)
+        bw = gray.point(lambda x: 0 if x < 140 else 255, '1') 
+
+        ocr_text = pytesseract.image_to_string(bw, lang="eng", config='--psm 6')
+        ocr_text = re.sub(r'[^a-zA-Z0-9\s.,!?]', '', ocr_text)
+
+        return ocr_text 
